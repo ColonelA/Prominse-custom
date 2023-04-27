@@ -4,6 +4,43 @@ const FULFILLED = 'FULFILLED';
 const REJECTED = 'REJECTED';
 
 
+function resolvePromise(newPromise, x, resolve, reject) {
+
+    if (newPromise === x) {
+        return reject(new TypeError('错误，引用一致'));
+    }
+  
+    let called = false;
+    if (typeof x === 'object' && x !== null || typeof x === 'function') {
+        try {
+            let then = x.then;
+            if (typeof then === 'function') {
+                then.call(x, y => { 
+                    if (called) return;
+                    called = true;
+                    resolvePromise(newPromise, y, resolve, reject)
+                }, err => { 
+                    if (called) return;
+                    called = true;
+                    reject(err)
+                })
+            }
+
+        } catch (e) { 
+            reject(x)
+        }
+
+    } else { 
+        if (called) return;
+        called = true;
+        // 普通值直接执行 
+        resolve(x)
+    }
+
+}
+
+
+
 class Promise {
     constructor(executor) {
         this.status = PENDING; // 初始化为默认的状态  
@@ -48,6 +85,21 @@ class Promise {
 
 
         const newPromise = new Promise((resolve, reject) => {
+            // 记录状态下，保存任务切片 
+            if (this.status === PENDING) {
+                this.onRejectedCallbacks.push(() => {
+                    setTimeout(() => {
+                        try {
+                            const x = onFulfilled(this.value);
+                            resolvePromise(newPromise, x, resolve, reject);
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }, 0)
+                })
+            }
+
+
 
         })
 
