@@ -13,9 +13,24 @@ class Promise {
         this.onResolvedCallbacks = [] // 成功存放的回调
         this.onRejectedCallbacks = [] // 失败的回调 
 
-        const resolve = () => {};
+        const resolve = (value) => {
 
-        const reject = () => {};
+
+            if (this.status = PENDING) {
+                this.value = value;
+                this.status = FULFILLED;
+                this.onResolvedCallbacks.forEach(fn => fn())
+            }
+        };
+
+        const reject = (reason) => {
+            if (this.status = PENDING) {
+                this.reason = reason;
+                this.status = REJECTED;
+                this.onRejectedCallbacks.forEach(fn => fn())
+            }
+
+        };
 
 
         try {
@@ -25,6 +40,20 @@ class Promise {
         }
     }
 
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v;
+        onRejected = typeof onRejected === 'function' ? onRejected : err => {
+            throw err;
+        };
+
+
+        const newPromise = new Promise((resolve, reject) => {
+
+        })
+
+        return newPromise
+
+    }
 }
 
 
