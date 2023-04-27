@@ -123,16 +123,16 @@ class Promise {
                     }, 0)
                 });
 
-             this.onRejectedCallbacks.push(() => { 
-                 setTimeout(() => { 
-                    try {
-                        const x = onFulfilled(this.reason);
-                        resolvePromise(newPromise, x, resolve, reject);
-                    } catch (e) {
-                        reject(e)
-                    }
-                 })
-             })
+                this.onRejectedCallbacks.push(() => {
+                    setTimeout(() => {
+                        try {
+                            const x = onFulfilled(this.reason);
+                            resolvePromise(newPromise, x, resolve, reject);
+                        } catch (e) {
+                            reject(e)
+                        }
+                    })
+                })
             }
 
 
@@ -141,22 +141,22 @@ class Promise {
 
         return newPromise
 
-    } 
+    }
 
-    static resolve(value){
-        return new Promise((resolve,reject)=>{
+    static resolve(value) {
+        return new Promise((resolve, reject) => {
             resolve(value);
         })
     }
-    static reject(value){
-        return new Promise((resolve,reject)=>{
+    static reject(value) {
+        return new Promise((resolve, reject) => {
             reject(value);
         })
     }
-    catch(errorFn){
-        return this.then(null,errorFn)
+    catch (errorFn) {
+        return this.then(null, errorFn)
     }
-      
+
 }
 
 
