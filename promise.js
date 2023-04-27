@@ -141,7 +141,22 @@ class Promise {
 
         return newPromise
 
+    } 
+
+    static resolve(value){
+        return new Promise((resolve,reject)=>{
+            resolve(value);
+        })
     }
+    static reject(value){
+        return new Promise((resolve,reject)=>{
+            reject(value);
+        })
+    }
+    catch(errorFn){
+        return this.then(null,errorFn)
+    }
+      
 }
 
 
